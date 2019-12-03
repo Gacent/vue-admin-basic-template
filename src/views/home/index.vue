@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div class="app-main-wrap">
     <div v-if="parseTime" class="dashboard-text">parseTime：{{ parseTime }}</div>
     <div v-if="formatTime" class="dashboard-text">formatTime：{{ formatTime }}</div>
     <div v-if="param2Obj" class="dashboard-text">param2Obj：{{ param2Obj }}</div>
@@ -33,13 +33,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
 </style>
