@@ -1,5 +1,10 @@
+// eslint-disable-next-line
 import { asyncRoutes, constantRoutes } from '@/router'
-
+import Layout from '@/layout'
+import { routerTest } from '@/api/user'
+function _imports(file) {
+  return resolve => require(['@/views/' + file + '.vue'], resolve)
+}
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
@@ -20,7 +25,6 @@ function hasPermission(roles, route) {
  */
 export function filterAsyncRoutes(routes, roles) {
   const res = []
-
   routes.forEach(route => {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
@@ -29,6 +33,26 @@ export function filterAsyncRoutes(routes, roles) {
       }
       res.push(tmp)
     }
+  })
+
+  return res
+}
+
+export function filterAsyncRoutesTwo(routes, roles) {
+  const res = []
+  routes.forEach(route => {
+    const tmp = { ...route }
+    if (tmp.children) {
+      tmp.children = filterAsyncRoutesTwo(tmp.children, roles)
+    }
+    if (tmp.component) {
+      if (tmp.component === 'Layout') { // Layout组件特殊处理
+        tmp.component = Layout
+      } else {
+        tmp.component = _imports(tmp.component)
+      }
+    }
+    res.push(tmp)
   })
 
   return res
@@ -48,15 +72,24 @@ const mutations = {
 
 const actions = {
   generateRoutes({ commit }, roles) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
+      // 从后台获取当前角色的权限的路由
       let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
+      routerTest().then((res) => {
+        if (res.code === 20000) {
+          accessedRoutes = filterAsyncRoutesTwo(res.data, roles) || []
+          accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
+          commit('SET_ROUTES', accessedRoutes)
+          resolve(accessedRoutes)
+        }
+      }).catch((err) => {
+        reject(err)
+      })
+      // if (roles.includes('admin')) {
+      //   accessedRoutes = asyncRoutes || []
+      // } else {
+      //   accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+      // }
     })
   }
 }

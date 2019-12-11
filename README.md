@@ -52,3 +52,10 @@ Modern browsers and Internet Explorer 10+.
 1. 登录(login)和路由权限(permission.js)，目前使用mock模拟，根据自己登录的业务需要，自行修改
 2. 环境为：development（开发环境），test（测试环境），pre（预发布环境），production（正式环境），可自行添加，并对应在package,json中添加
 3. VUE_CLI_BABEL_TRANSPILE_MODULES为是否开启路由懒加载
+
+4. 路由方式：
+- 登录：拿到角色
+- 角色请求后台接口后拿到对应的路由表，其中父级component是字符串的'Layout',children的component是字符串的路径组件（'test/test1'）
+- 使用_imports对字符串component转换成对应的component
+- 最后addRoutes
+- 需要注意的是，侧边栏的展示数据要读取对应的permission_routes

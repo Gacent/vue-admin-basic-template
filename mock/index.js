@@ -2,9 +2,11 @@ import Mock from 'mockjs'
 import { param2Obj } from '../src/utils'
 
 import user from './user'
+import routerTest from './routerTest'
 
 const mocks = [
-  ...user
+  ...user,
+  ...routerTest
 ]
 
 // for front mock

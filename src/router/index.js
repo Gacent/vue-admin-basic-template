@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+function _imports(file) {
+  return resolve => require(['@/views/' + file + '.vue'], resolve)
+}
 Vue.use(Router)
 
 /* Layout */
@@ -18,19 +20,19 @@ export const constantRoutes = [
     children: [
       {
         path: '/redirect/:path*',
-        component: () => import('@/views/redirect/index')
+        component: _imports('redirect/index')
       }
     ]
   },
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: _imports('login/index'),
     hidden: true
   },
 
   {
     path: '/404',
-    component: () => import('@/views/404'),
+    component: _imports('404'),
     hidden: true
   },
 
@@ -41,31 +43,10 @@ export const constantRoutes = [
     children: [{
       path: 'home',
       name: 'Home',
-      component: () => import('@/views/home/index'),
+      component: _imports('home/index'),
       meta: { title: 'Home', icon: 'dashboard' }
     }]
-  },
-  // 测试用
-  {
-    path: '/test',
-    component: Layout,
-    redirect: '/test/test1',
-    meta: { title: 'Test', icon: 'dashboard' },
-    children: [{
-      path: 'test1',
-      name: 'Test1',
-      component: () => import('@/views/test/test1'),
-      meta: { title: 'Test1', icon: 'dashboard' }
-    }, {
-      path: 'test2',
-      name: 'Test2',
-      component: () => import('@/views/test/test2'),
-      meta: { title: 'Test2', icon: 'dashboard' }
-    }]
-  },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 
 const createRouter = () => new Router({

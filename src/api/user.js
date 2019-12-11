@@ -16,6 +16,12 @@ export function getInfo(token) {
   })
 }
 
+export function routerTest() {
+  return request({
+    url: '/router/testList',
+    method: 'post'
+  })
+}
 export function logout() {
   return request({
     url: '/user/logout',
